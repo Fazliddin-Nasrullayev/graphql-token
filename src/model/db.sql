@@ -7,5 +7,4 @@ create table users(
 create table posts(
     post_id serial primary key,
     post_title
-    
 );
