@@ -6,5 +6,6 @@ create table users(
 
 create table posts(
     post_id serial primary key,
-    post_title
+    post_title varchar(555) not null,
+    user_id int references users(user_id)
 );

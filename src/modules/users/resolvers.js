@@ -1,11 +1,16 @@
 const { sign } = require("./../../utils/jwt");
-const { getUser, createUser } = require("./model");
+const { getUser, createUser, getAllUsers } = require("./model");
 const sha256 = require("sha256");
 const { GraphQLError } = require('graphql')
 
 module.exports = {
     Query: {
-        users: () => []
+        users: async() =>{
+            
+           const a =  await  getAllUsers()
+           console.log(a)
+           return a
+        }
     },
     Mutation: {
         register: async (_ ,{ username, password }) =>
@@ -15,8 +20,8 @@ module.exports = {
                 const existingUser = await getUser(username, sha256.x2(password));
 
                 if(existingUser.length){
-                    throw new GraphQLError('Bad request', {
-                      extensions: { code: 'YOUR_ERROR_CODE', },
+                    throw new GraphQLError('Bad request user already exsist', {
+                      extensions: { code: '422', },
                     });
                 }
 
@@ -28,8 +33,9 @@ module.exports = {
                 }
 
             } catch (error) {
-             throw new GraphQLError("INTERVAL ERROR", {
-              extensions: { code: 'YOUR_ERROR_CODE' },
+                console.log(error);
+             throw new GraphQLError(error.message, {
+              extensions: { code: error.extensions.code },
             });
             }
 
